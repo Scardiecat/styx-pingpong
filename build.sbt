@@ -22,8 +22,7 @@ lazy val root = (project in file("."))
     publishMavenStyle := false,
     libraryDependencies ++= Dependencies.spray,
     commonSettings
-  ).dependsOn(Dependencies.microservice)
-
+  ).aggregate(api, backend)
 //
 // API
 //
@@ -32,6 +31,24 @@ lazy val api = (project in file("api"))
   .settings(
     name := "styx-pingpong-api",
     commonSettings,
-    publishMavenStyle := false,
-
+    publishMavenStyle := false
   )
+
+lazy val backend = (project in file("backend"))
+  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .settings(
+    name := "styx-pingpong-backend",
+    libraryDependencies ++= Dependencies.backend,
+    javaOptions ++= Seq(
+      "-Djava.library.path=" + (baseDirectory.value / "sigar" ).getAbsolutePath,
+      "-Xms128m", "-Xmx1024m"),
+    // this enables custom javaOptions
+    fork in run := false,
+    mappings in Universal ++= directory(baseDirectory.value / "sigar"),
+    bashScriptExtraDefines ++= Seq(
+      """declare -r sigar_dir="$(realpath "${app_home}/../sigar")"""",
+      """addJava "-Djava.library.path=${sigar_dir}""""
+    ),
+    mainClass in (Compile)  := Some("main.PingPongBackendApp"),
+    commonSettings
+  ).dependsOn(api)

@@ -14,6 +14,7 @@ object Dependencies {
   lazy val microservice = RootProject(uri("https://github.com/Scardiecat/styx-microservice.git#%s".format(dependantProjects.microservice)))
 
   lazy val spray = common ++ http
+  lazy val backend = common ++ metrics ++ tests
 
   lazy val pingpong = common
 
@@ -26,6 +27,10 @@ object Dependencies {
   
   val tests = Seq(
     "com.typesafe.akka" %% "akka-testkit" % Version.akka % "test"
+  )
+
+  val metrics = Seq(
+    "io.kamon" % "sigar-loader" % "1.6.6-rev002"
   )
 
   val http = Seq(
