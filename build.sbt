@@ -23,3 +23,15 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Dependencies.spray,
     commonSettings
   ).dependsOn(Dependencies.microservice)
+
+//
+// API
+//
+lazy val api = (project in file("api"))
+  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .settings(
+    name := "styx-pingpong-api",
+    commonSettings,
+    publishMavenStyle := false,
+
+  )
