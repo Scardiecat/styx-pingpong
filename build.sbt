@@ -3,7 +3,7 @@ import NativePackagerHelper._
 
 val commonSettings = Seq(
   organization := "org.scrdiecat",
-  version := "0.0.1",
+  version := "0.0.2",
   scalaVersion := "2.11.7",
 
   // build info
@@ -21,7 +21,7 @@ lazy val root = (project in file("."))
     name := """styx-pingpong""",
     publishMavenStyle := false,
     commonSettings
-  ).aggregate(api, backend, frontend, monolid)
+  ).aggregate(api, backend, frontend, monolith)
 //
 // API
 //
@@ -66,11 +66,11 @@ lazy val frontend = (project in file("frontend"))
     commonSettings
   ).dependsOn(api)
 
-lazy val monolid = (project in file("monolid"))
+lazy val monolith = (project in file("monolith"))
   .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
   .settings(
-    name := "styx-pingpong-monolid",
+    name := "styx-pingpong-monolith",
     commonSettings,
     publishMavenStyle := false,
-    mainClass in (Compile)  := Some("main.MonolidBoot")
+    mainClass in (Compile)  := Some("main.MonolithBoot")
   ).dependsOn(frontend, backend)
