@@ -7,13 +7,7 @@ object Dependencies {
     val spray = "1.3.3"
   }
 
-  object dependantProjects {
-    val microservice = "master"
-  }
-
-  lazy val microservice = RootProject(uri("https://github.com/Scardiecat/styx-microservice.git#%s".format(dependantProjects.microservice)))
-
-  lazy val spray = common ++ http
+  lazy val frontend = common ++ http
   lazy val backend = common ++ metrics ++ tests
 
   lazy val pingpong = common
@@ -38,7 +32,8 @@ object Dependencies {
     "io.spray" %% "spray-routing" % Version.spray,
     "io.spray" %%  "spray-json" % "1.3.2",
     "org.json4s" %% "json4s-native" % "3.3.0",
-    "org.scalaz" %% "scalaz-core" % "7.1.5"
+    "org.scalaz" %% "scalaz-core" % "7.1.5",
+    "org.scardiecat" %% "styx-microservice" % "0.0.3-SNAPSHOT"
   )
 
 }

@@ -20,7 +20,6 @@ lazy val root = (project in file("."))
   .settings(
     name := """styx-pingpong""",
     publishMavenStyle := false,
-    libraryDependencies ++= Dependencies.spray,
     commonSettings
   ).aggregate(api, backend)
 //
@@ -50,5 +49,19 @@ lazy val backend = (project in file("backend"))
       """addJava "-Djava.library.path=${sigar_dir}""""
     ),
     mainClass in (Compile)  := Some("main.PingPongBackendApp"),
+    commonSettings
+  ).dependsOn(api)
+
+lazy val frontend = (project in file("frontend"))
+  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .settings(
+    name := "styx-pingpong-frontend",
+    libraryDependencies ++= Dependencies.frontend,
+    javaOptions ++= Seq(
+      "-Xms128m", "-Xmx1024m"),
+
+    resolvers += "spray repo" at "http://repo.spray.io",
+
+    mainClass in (Compile)  := Some("main.Boot"),
     commonSettings
   ).dependsOn(api)
