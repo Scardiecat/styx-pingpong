@@ -1,7 +1,7 @@
 package main
 
 
-object MonolidBoot extends App {
+object MonolithBoot extends App {
 
    val frontend = FrontendBoot.main(Array[String]())
    val backend = PingPongBackendApp.main(Array[String]())
