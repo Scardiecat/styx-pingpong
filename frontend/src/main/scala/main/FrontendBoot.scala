@@ -9,7 +9,7 @@ import spray.routing.Route
 import scala.concurrent.ExecutionContext
 
 
-object Boot extends App with Microservice{
+object FrontendBoot extends App with Microservice{
 
     val port: String = if (args.length > 0) args(0) else "2553"
     val role: String = if (args.length > 1) args(1) else "frontend"

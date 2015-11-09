@@ -21,7 +21,7 @@ lazy val root = (project in file("."))
     name := """styx-pingpong""",
     publishMavenStyle := false,
     commonSettings
-  ).aggregate(api, backend)
+  ).aggregate(api, backend, frontend, monolid)
 //
 // API
 //
@@ -62,6 +62,15 @@ lazy val frontend = (project in file("frontend"))
 
     resolvers += "spray repo" at "http://repo.spray.io",
 
-    mainClass in (Compile)  := Some("main.Boot"),
+    mainClass in (Compile)  := Some("main.FrontendBoot"),
     commonSettings
   ).dependsOn(api)
+
+lazy val monolid = (project in file("monolid"))
+  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .settings(
+    name := "styx-pingpong-monolid",
+    commonSettings,
+    publishMavenStyle := false,
+    mainClass in (Compile)  := Some("main.MonolidBoot")
+  ).dependsOn(frontend, backend)
