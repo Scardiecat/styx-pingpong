@@ -41,7 +41,7 @@ public class PongActor extends UntypedActor {
         if (message instanceof Ping) {
             counter++;
             Ping ping = (Ping) message;
-            if(counter % 1000 == 0) {
+            if(counter % 1 == 0) {
                 LOGGER.info("In PongActor {} - received message: {} count {}", selfAddress.toString(), ping.txt(), counter);
             }
             getSender().tell(new Pong(pongMessage), getSelf());

@@ -6,4 +6,5 @@ object Definitions {
   val ActorSystemName = "SampleActorSystem"
 
   val PongActorName = "PongActor"
+  val AdminActorName = "AdminActor"
 }

@@ -1,76 +1,89 @@
-import NativePackagerHelper._
-
+enablePlugins(GitVersioning)
 
 val commonSettings = Seq(
-  organization := "org.scrdiecat",
-  version := "0.0.2",
+  organization := "org.scardiecat",
+  git.baseVersion := "0.0.3",
+  git.gitTagToVersionNumber := { tag: String =>
+    if(tag matches "[0-9]+\\..*") Some(tag)
+    else None
+  },
+  git.useGitDescribe := true,
   scalaVersion := "2.11.7",
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:existentials", "-language:higherKinds"),
+
 
   // build info
   buildInfoPackage := "meta",
   buildInfoOptions += BuildInfoOption.ToJson,
+  buildInfoOptions += BuildInfoOption.BuildTime,
   buildInfoKeys := Seq[BuildInfoKey](
-    name, version, scalaVersion,
-    "sbtNativePackager" -> "1.0.0"
-  )
+    name, version, scalaVersion
+  ),
+  publishMavenStyle := true,
+  bintrayReleaseOnPublish in ThisBuild := true,
+  bintrayPackageLabels := Seq("styx", "scala", "Akka"),
+  licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+)
+
+val commonDockerSettings = Seq(
+  dockerBaseImage := "frolvlad/alpine-oraclejdk8",
+  dockerExposedPorts := Seq(2551),
+  maintainer in Docker := "Ralf Mueller <docker@scardiecat.org>",
+  dockerRepository := Some("magicmoose-docker-registry.bintray.io/scardiecat")
 )
 
 lazy val root = (project in file("."))
-  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .enablePlugins(BuildInfoPlugin, AshScriptPlugin,DockerPlugin, GitVersioning)
   .settings(
     name := """styx-pingpong""",
-    publishMavenStyle := false,
     commonSettings
   ).aggregate(api, backend, frontend, monolith)
 //
 // API
 //
 lazy val api = (project in file("api"))
-  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .enablePlugins(BuildInfoPlugin, AshScriptPlugin,DockerPlugin, GitVersioning)
   .settings(
     name := "styx-pingpong-api",
-    commonSettings,
-    publishMavenStyle := false
+    libraryDependencies ++= Dependencies.api,
+    commonSettings
   )
 
 lazy val backend = (project in file("backend"))
-  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .enablePlugins(BuildInfoPlugin, AshScriptPlugin,DockerPlugin, GitVersioning)
   .settings(
     name := "styx-pingpong-backend",
     libraryDependencies ++= Dependencies.backend,
     javaOptions ++= Seq(
-      "-Djava.library.path=" + (baseDirectory.value / "sigar" ).getAbsolutePath,
       "-Xms128m", "-Xmx1024m"),
     // this enables custom javaOptions
     fork in run := false,
-    mappings in Universal ++= directory(baseDirectory.value / "sigar"),
-    bashScriptExtraDefines ++= Seq(
-      """declare -r sigar_dir="$(realpath "${app_home}/../sigar")"""",
-      """addJava "-Djava.library.path=${sigar_dir}""""
-    ),
-    mainClass in (Compile)  := Some("main.PingPongBackendApp"),
-    commonSettings
+    mainClass in (Compile)  := Some("main.PingPongBackendBoot"),
+    commonSettings,
+    commonDockerSettings
   ).dependsOn(api)
 
 lazy val frontend = (project in file("frontend"))
-  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .enablePlugins(BuildInfoPlugin, AshScriptPlugin,DockerPlugin, GitVersioning)
   .settings(
     name := "styx-pingpong-frontend",
     libraryDependencies ++= Dependencies.frontend,
     javaOptions ++= Seq(
       "-Xms128m", "-Xmx1024m"),
-
-    resolvers += "spray repo" at "http://repo.spray.io",
-
-    mainClass in (Compile)  := Some("main.FrontendBoot"),
-    commonSettings
+    // this enables custom javaOptions
+    fork in run := false,
+    mainClass in (Compile)  := Some("main.PingPongFrontendBoot"),
+    commonSettings,
+    dockerExposedPorts ++= Seq(12551),
+    commonDockerSettings
   ).dependsOn(api)
 
 lazy val monolith = (project in file("monolith"))
-  .enablePlugins(BuildInfoPlugin, JavaAppPackaging)
+  .enablePlugins(BuildInfoPlugin, AshScriptPlugin,DockerPlugin, GitVersioning)
   .settings(
     name := "styx-pingpong-monolith",
+    mainClass in (Compile)  := Some("main.MonolithBoot"),
     commonSettings,
-    publishMavenStyle := false,
-    mainClass in (Compile)  := Some("main.MonolithBoot")
+    commonDockerSettings,
+    dockerExposedPorts ++= Seq(2552, 2553, 12553)
   ).dependsOn(frontend, backend)

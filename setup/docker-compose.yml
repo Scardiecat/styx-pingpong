@@ -1,0 +1,36 @@
+seed1:
+  image:  magicmoose-docker-registry.bintray.io/scardiecat/styx-akka-seed-node:0.0.4
+  ports:
+    - "9101:2551"
+  environment:
+    CLUSTER_SEED_NODES: '${IP}:9101,${IP}:9102'
+    AS_NAME: 'hn_uat_a'
+
+
+seed2:
+  image:  magicmoose-docker-registry.bintray.io/scardiecat/styx-akka-seed-node:0.0.4
+  ports:
+    - "9102:2551"
+  environment:
+    CLUSTER_SEED_NODES: '${IP}:9101,${IP}:9102'
+    AS_NAME: 'hn_uat_a'
+
+backend1:
+  build: backend/stage/.
+  ports:
+    - "2551"
+  environment:
+    CLUSTER_SEED_NODES: '${IP}:9101,${IP}:9102'
+    AS_NAME: 'hn_uat_a'
+    JAVA_OPTS: '-XX:+PrintFlagsFinal'
+
+frontend1:
+  build: frontend/stage/.
+  ports:
+    - "2551"
+    - "80:12551"
+
+  environment:
+    CLUSTER_SEED_NODES: '${IP}:9101,${IP}:9102'
+    AS_NAME: 'hn_uat_a'
+    JAVA_OPTS: '-XX:+PrintFlagsFinal'
