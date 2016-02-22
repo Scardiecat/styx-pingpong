@@ -12,3 +12,7 @@ case class Pong(txt:String) extends ResponseMessage
 sealed trait AdminMessage
 
 case class ChangePongMessage(txt:String) extends AdminMessage
+
+sealed trait ErrorMessage
+
+case class GenericError(httpErrorCode: Int, message: String) extends  ErrorMessage

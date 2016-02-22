@@ -4,17 +4,16 @@ import akka.actor.{ActorRef, ActorSystem}
 
 import scala.concurrent.ExecutionContext
 
-case class PingPongServiceBoot private(frontendActor: ActorRef){
-  def route(implicit ec: ExecutionContext) = PingPongService.pingPongRoute(frontendActor) (ec)
+case class PingPongServiceBoot private(){
+  def route(implicit ec: ExecutionContext, system: ActorSystem) = PingPongService.pingPongRoute() (ec, system)
+
+  def adminRoute(implicit ec: ExecutionContext, system: ActorSystem) = PingPongService.adminRoute() (ec, system)
 }
 
 object PingPongServiceBoot {
 
   def boot(implicit system: ActorSystem): PingPongServiceBoot = {
-
-    val frontendActor = system.actorOf(FrontendActor.props, "FrontendActor")
-
-    PingPongServiceBoot(frontendActor)
+    PingPongServiceBoot()
   }
 
 }

@@ -3,11 +3,12 @@ import sbt._
 object Dependencies {
 
   object Version {
-    val akka = "2.4.0"
+    val akka = "2.4.1"
     val spray = "1.3.3"
   }
 
-  lazy val frontend = common ++ http
+  lazy val api = apiDep
+  lazy val frontend = common ++ http ++ metrics
   lazy val backend = common ++ metrics ++ tests
 
   lazy val pingpong = common
@@ -16,11 +17,16 @@ object Dependencies {
     "ch.qos.logback" % "logback-classic" % "1.1.3",
     "com.typesafe.akka" %% "akka-actor" % Version.akka,
     "com.typesafe.akka" %% "akka-cluster" % Version.akka,
-    "com.typesafe.akka" %% "akka-slf4j" % Version.akka
+    "com.typesafe.akka" %% "akka-cluster-metrics" % Version.akka,
+    "com.typesafe.akka" %% "akka-slf4j" % Version.akka,
+    "org.scardiecat" %% "styx-akka-guice" % "0.0.2",
+    "org.scardiecat" %% "styx-utils" % "0.0.4",
+    "org.scardiecat" %% "styx-akka-seed-node" % "0.0.3"
   )
   
   val tests = Seq(
-    "com.typesafe.akka" %% "akka-testkit" % Version.akka % "test"
+    "com.typesafe.akka" %% "akka-testkit" % Version.akka % "test",
+    "junit" % "junit" % "4.12"
   )
 
   val metrics = Seq(
@@ -36,4 +42,7 @@ object Dependencies {
     "org.scardiecat" %% "styx-microservice" % "0.0.3"
   )
 
+  val apiDep = Seq(
+    "com.google.protobuf" % "protobuf-java" % "2.6.1"
+  )
 }
