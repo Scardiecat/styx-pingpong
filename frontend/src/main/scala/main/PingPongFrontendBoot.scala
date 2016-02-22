@@ -2,6 +2,7 @@ package main
 
 import akka.actor.ActorSystem
 import com.typesafe.config.{Config, ConfigFactory}
+import kamon.Kamon
 import org.scardiecat.styx.pingpong.api.Definitions
 import org.scardiecat.styx.DockerAkkaUtils
 import org.scardiecat.styx.microservice.Microservice
@@ -13,6 +14,7 @@ import scala.concurrent.ExecutionContext
 
 
 object PingPongFrontendBoot extends App with Microservice{
+  Kamon.start()
 
   val fallbackConfig:Config = ConfigFactory.load()
   var commandline = CommandlineParser.parse(args,meta.BuildInfo.name+":"+meta.BuildInfo.version, fallbackConfig, Seq[String](Definitions.FrontendRoleName))

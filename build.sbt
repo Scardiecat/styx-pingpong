@@ -57,10 +57,19 @@ lazy val backend = (project in file("backend"))
     javaOptions ++= Seq(
       "-Xms128m", "-Xmx1024m"),
     // this enables custom javaOptions
-    fork in run := false,
     mainClass in (Compile)  := Some("main.PingPongBackendBoot"),
     commonSettings,
-    commonDockerSettings
+    commonDockerSettings,
+    aspectjSettings,
+    javaOptions in run <++= AspectjKeys.weaverOptions in Aspectj,
+    fork in run :=true,
+
+    mappings in Universal += {
+      // we are using the reference.conf as default application.conf
+      // the user can override settings here
+      val conf = (resourceDirectory in Compile).value / "application.ini"
+      conf -> "conf/application.ini"
+    }
   ).dependsOn(api)
 
 lazy val frontend = (project in file("frontend"))
@@ -68,14 +77,20 @@ lazy val frontend = (project in file("frontend"))
   .settings(
     name := "styx-pingpong-frontend",
     libraryDependencies ++= Dependencies.frontend,
-    javaOptions ++= Seq(
-      "-Xms128m", "-Xmx1024m"),
-    // this enables custom javaOptions
-    fork in run := false,
     mainClass in (Compile)  := Some("main.PingPongFrontendBoot"),
     commonSettings,
     dockerExposedPorts ++= Seq(12551),
-    commonDockerSettings
+    commonDockerSettings,
+    aspectjSettings,
+    javaOptions in run <++= AspectjKeys.weaverOptions in Aspectj,
+    fork in run :=true,
+
+    mappings in Universal += {
+      // we are using the reference.conf as default application.conf
+      // the user can override settings here
+      val conf = (resourceDirectory in Compile).value / "application.ini"
+      conf -> "conf/application.ini"
+    }
   ).dependsOn(api)
 
 lazy val monolith = (project in file("monolith"))

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+EC2_USER=ec2-user
+CURRENT_EC2_IP=ec2-52-90-46-154.compute-1.amazonaws.com
+CURRENT_EC2_PEM=~/.ssh/heronet.pem
+CURRENT_PROJECT_NAME=styx-pingpong
+CURRENT_EC2_INSTANCE=$EC2_USER@$CURRENT_EC2_IP

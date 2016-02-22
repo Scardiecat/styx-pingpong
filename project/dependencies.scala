@@ -5,6 +5,7 @@ object Dependencies {
   object Version {
     val akka = "2.4.1"
     val spray = "1.3.3"
+    val kamon = "0.5.2"
   }
 
   lazy val api = apiDep
@@ -30,7 +31,14 @@ object Dependencies {
   )
 
   val metrics = Seq(
-    "io.kamon" % "sigar-loader" % "1.6.6-rev002"
+    "io.kamon" % "sigar-loader" % "1.6.6-rev002",
+    "io.kamon" %% "kamon-statsd" % Version.kamon,
+    "io.kamon" %% "kamon-scala" % Version.kamon,
+    "io.kamon" %% "kamon-akka" % Version.kamon,
+    "io.kamon" %% "kamon-akka-remote" % Version.kamon,
+    "io.kamon" %% "kamon-log-reporter" % Version.kamon,
+    "io.kamon" %% "kamon-system-metrics" % Version.kamon,
+    "org.aspectj" % "aspectjweaver" % "1.8.1"
   )
 
   val http = Seq(
