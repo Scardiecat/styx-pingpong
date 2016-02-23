@@ -1,3 +1,4 @@
+
 enablePlugins(GitVersioning)
 
 val commonSettings = Seq(
@@ -22,7 +23,8 @@ val commonSettings = Seq(
   publishMavenStyle := true,
   bintrayReleaseOnPublish in ThisBuild := true,
   bintrayPackageLabels := Seq("styx", "scala", "Akka"),
-  licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+  licenses += ("MIT", url("http://opensource.org/licenses/MIT")),
+  resolvers += "kamon" at "http://snapshots.kamon.io/"
 )
 
 val commonDockerSettings = Seq(

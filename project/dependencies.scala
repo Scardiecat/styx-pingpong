@@ -5,7 +5,7 @@ object Dependencies {
   object Version {
     val akka = "2.4.1"
     val spray = "1.3.3"
-    val kamon = "0.5.2"
+    val kamon = "0.6.0-a9d5c5c61f7e5e189bf67baee2b13e21ebbaaf73"
   }
 
   lazy val api = apiDep
@@ -35,9 +35,10 @@ object Dependencies {
     "io.kamon" %% "kamon-statsd" % Version.kamon,
     "io.kamon" %% "kamon-scala" % Version.kamon,
     "io.kamon" %% "kamon-akka" % Version.kamon,
-    "io.kamon" %% "kamon-akka-remote" % Version.kamon,
+    "io.kamon" %% "kamon-akka-remote_akka-2.4" % Version.kamon,
     "io.kamon" %% "kamon-log-reporter" % Version.kamon,
     "io.kamon" %% "kamon-system-metrics" % Version.kamon,
+    "io.kamon" %% "kamon-autoweave" % Version.kamon,
     "org.aspectj" % "aspectjweaver" % "1.8.1"
   )
 

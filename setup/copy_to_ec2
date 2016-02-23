@@ -2,12 +2,11 @@
 
 source localsettings
 
-ssh -i $CURRENT_EC2_PEM $CURRENT_EC2_INSTANCE rm -r /home/$EC2_USER/$CURRENT_PROJECT_NAME
+# ssh -i $CURRENT_EC2_PEM $CURRENT_EC2_INSTANCE rm -r /home/$EC2_USER/$CURRENT_PROJECT_NAME
 ssh -i $CURRENT_EC2_PEM $CURRENT_EC2_INSTANCE mkdir -p /home/$EC2_USER/$CURRENT_PROJECT_NAME/backend
 ssh -i $CURRENT_EC2_PEM $CURRENT_EC2_INSTANCE mkdir -p /home/$EC2_USER/$CURRENT_PROJECT_NAME/frontend
 
-scp -i $CURRENT_EC2_PEM -r ../backend/target/docker/stage/ $CURRENT_EC2_INSTANCE:/home/$EC2_USER/$CURRENT_PROJECT_NAME/backend
-scp -i $CURRENT_EC2_PEM -r ../frontend/target/docker/stage/ $CURRENT_EC2_INSTANCE:/home/$EC2_USER/$CURRENT_PROJECT_NAME/frontend
-
 scp -i $CURRENT_EC2_PEM docker-compose.yml $CURRENT_EC2_INSTANCE:/home/$EC2_USER/$CURRENT_PROJECT_NAME
 
+rsync  -rave  "ssh -i $CURRENT_EC2_PEM" ../backend/target/docker/stage/* $CURRENT_EC2_INSTANCE:/home/$EC2_USER/$CURRENT_PROJECT_NAME/backend/stage
+rsync  -rave  "ssh -i $CURRENT_EC2_PEM" ../frontend/target/docker/stage/* $CURRENT_EC2_INSTANCE:/home/$EC2_USER/$CURRENT_PROJECT_NAME/frontend/stage
